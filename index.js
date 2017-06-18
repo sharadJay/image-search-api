@@ -39,7 +39,13 @@ app.get("/search", (req, res)=> {
 });
 
 app.get("/history", (req, res)=> {
-    res.send("history");
+    mongoose.connect(process.env.MONGOLAB_URL);
+    imageSearchHistory.find({}, (err, docs) => {
+        var history = docs.map((currentHistory) => {
+            return {term: currentHistory.term, when: currentHistory.when}
+        });
+        res.send(history);
+    });
 });
 
 app.listen(port, function () {
